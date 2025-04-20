@@ -26,9 +26,8 @@ export const DragNDropBoxes = () => {
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         <div className="flex flex-col gap-4 items-center">
-          {items.map((color) => (
-            <SortableCube key={color} id={color} />
-          ))}
+          {items &&
+            items.map((color) => <SortableCube key={color} id={color} />)}
         </div>
       </SortableContext>
     </DndContext>
