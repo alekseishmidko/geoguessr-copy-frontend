@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export const SortableCube = ({ id }: { id: string }) => {
+export const SortableCube = ({ id, color }: { id: string; color: string }) => {
   const {
     attributes,
     listeners,
@@ -22,7 +22,7 @@ export const SortableCube = ({ id }: { id: string }) => {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      style={{ ...style, backgroundColor: id }}
+      style={{ ...style, backgroundColor: color }}
       className="w-24 h-24 flex   cursor-grab"
     ></div>
   );
