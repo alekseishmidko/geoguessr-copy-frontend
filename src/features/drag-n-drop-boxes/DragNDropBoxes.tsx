@@ -10,26 +10,82 @@ import {
 
 import { COLORS } from "@/shared/constants/colors";
 import { SortableCube } from "./components/SortableCube";
-export const DragNDropBoxes = () => {
-  const [items, setItems] = useState<string[]>(COLORS);
+type Cols = "0" | "1" | "2" | "3";
 
+type Item = {
+  id: string;
+  color: string;
+};
+// TODO сделать чтобы было ограничение на количество кубов в столбце,
+// рандомные комбинации кубов вначале
+// анимация
+export const DragNDropBoxes = () => {
+  const [items, setItems] = useState<Record<Cols, Item[]>>({
+    "0": COLORS.map((color, i) => ({ id: `0-${i}`, color })),
+    "1": COLORS.map((color, i) => ({ id: `1-${i}`, color })),
+    "2": COLORS.map((color, i) => ({ id: `2-${i}`, color })),
+    "3": COLORS.map((color, i) => ({ id: `3-${i}`, color })),
+  });
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    if (!over || active.id === over.id) return;
 
-    if (active.id !== over?.id) {
-      const oldIndex = items.indexOf(String(active.id));
-      const newIndex = items.indexOf(String(over?.id));
-      setItems(arrayMove(items, oldIndex, newIndex));
+    const activeId = active.id as string;
+    const overId = over.id as string;
+
+    let sourceCol: Cols | undefined;
+    let targetCol: Cols | undefined;
+
+    for (const col in items) {
+      const typedCol = col as Cols;
+      if (items[typedCol].some((item) => item.id === activeId)) {
+        sourceCol = typedCol;
+      }
+      if (items[typedCol].some((item) => item.id === overId)) {
+        targetCol = typedCol;
+      }
+    }
+
+    if (sourceCol === undefined || targetCol === undefined) return;
+
+    const sourceItems = [...items[sourceCol]];
+    const targetItems = [...items[targetCol]];
+
+    const draggedItemIndex = sourceItems.findIndex((i) => i.id === activeId);
+    const targetIndex = targetItems.findIndex((i) => i.id === overId);
+
+    const [movedItem] = sourceItems.splice(draggedItemIndex, 1);
+
+    if (sourceCol === targetCol) {
+      const updated = arrayMove(targetItems, draggedItemIndex, targetIndex);
+      setItems({ ...items, [sourceCol]: updated });
+    } else {
+      targetItems.splice(targetIndex, 0, movedItem);
+      setItems({
+        ...items,
+        [sourceCol]: sourceItems,
+        [targetCol]: targetItems,
+      });
     }
   };
+
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        <div className="flex flex-col gap-4 items-center">
-          {items &&
-            items.map((color) => <SortableCube key={color} id={color} />)}
-        </div>
-      </SortableContext>
+      <div className="grid grid-cols-4 gap-6 mt-10">
+        {Object.entries(items).map(([colKey, column]) => (
+          <SortableContext
+            key={colKey}
+            items={column.map((item) => item.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="flex flex-col items-center gap-2 border border-gray-300 p-4 rounded bg-white">
+              {column.map(({ id, color }) => (
+                <SortableCube key={id} id={id} color={color} />
+              ))}
+            </div>
+          </SortableContext>
+        ))}
+      </div>
     </DndContext>
   );
 };
