@@ -24,6 +24,8 @@ export const SortableCube = ({ id, color }: { id: string; color: string }) => {
       {...listeners}
       style={{ ...style, backgroundColor: color }}
       className="w-24 h-24 flex   cursor-grab"
-    ></div>
+    >
+      {id}
+    </div>
   );
 };
