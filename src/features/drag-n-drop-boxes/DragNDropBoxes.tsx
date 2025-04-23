@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragEndEvent,
+  closestCenter,
+  DragStartEvent,
+  DragOverlay,
+} from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -10,17 +16,19 @@ import {
 
 import { COLORS } from "@/shared/constants/colors";
 import { SortableCube } from "./components/SortableCube";
+
 type Cols = "0" | "1" | "2" | "3";
 
 type Item = {
   id: string;
   color: string;
 };
+
 const MAX_ITEMS_PER_COLUMN = 4;
 const COLUMNS: Cols[] = ["0", "1", "2", "3"];
+
 const generateColorPool = (colors: string[], maxPerColor: number): Item[] => {
   const pool: Item[] = [];
-
   const colorCount: Record<string, number> = {};
 
   while (true) {
@@ -42,18 +50,20 @@ const generateColorPool = (colors: string[], maxPerColor: number): Item[] => {
     });
   }
 
-  // Перемешиваем финальный пул
   return pool.sort(() => Math.random() - 0.5);
 };
 
-// TODO сделать чтобы было ограничение на количество кубов в столбце,
-// рандомные комбинации кубов вначале
-// анимация передвижения куба
-// улучшить типизацию
-// юзать useId или что то такое
+const allColumnsHaveUniformColors = (items: Record<Cols, Item[]>) => {
+  return Object.values(items).every((column) => {
+    if (column.length === 0) return true;
+    const firstColor = column[0].color;
+    return column.every((item) => item.color === firstColor);
+  });
+};
 
 export const DragNDropBoxes = () => {
   const cubePool = generateColorPool(COLORS, MAX_ITEMS_PER_COLUMN);
+
   const [items, setItems] = useState<Record<Cols, Item[]>>(() => {
     const result: Partial<Record<Cols, Item[]>> = {};
 
@@ -70,7 +80,22 @@ export const DragNDropBoxes = () => {
     return result as Record<Cols, Item[]>;
   });
 
+  const [activeItem, setActiveItem] = useState<Item | null>(null);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const activeId = event.active.id as string;
+
+    for (const col in items) {
+      const item = items[col as Cols].find((el) => el.id === activeId);
+      if (item) {
+        setActiveItem(item);
+        break;
+      }
+    }
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveItem(null);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -107,18 +132,31 @@ export const DragNDropBoxes = () => {
     if (sourceCol === targetCol) {
       const updated = arrayMove(targetItems, draggedItemIndex, targetIndex);
       setItems({ ...items, [sourceCol]: updated });
+
+      if (allColumnsHaveUniformColors({ ...items, [sourceCol]: updated })) {
+        alert("🎉 Победа! Все цвета разложены правильно!");
+      }
     } else {
       targetItems.splice(targetIndex, 0, movedItem);
-      setItems({
+      const newState = {
         ...items,
         [sourceCol]: sourceItems,
         [targetCol]: targetItems,
-      });
+      };
+      setItems(newState);
+
+      if (allColumnsHaveUniformColors(newState)) {
+        alert("🎉 Победа! Все цвета разложены правильно!");
+      }
     }
   };
 
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       <div className="grid grid-cols-4 gap-6 mt-10">
         {Object.entries(items).map(([colKey, column]) => (
           <SortableContext
@@ -126,9 +164,7 @@ export const DragNDropBoxes = () => {
             items={column.map((item) => item.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div
-              className={`flex flex-col items-center gap-2 border border-gray-300 p-4 rounded bg-white`}
-            >
+            <div className="flex flex-col items-center gap-2 border border-gray-300 p-4 rounded bg-white min-h-[200px]">
               {column.map(({ id, color }) => (
                 <SortableCube key={id} id={id} color={color} />
               ))}
@@ -136,6 +172,12 @@ export const DragNDropBoxes = () => {
           </SortableContext>
         ))}
       </div>
+
+      <DragOverlay>
+        {activeItem && (
+          <SortableCube id={activeItem.id} color={activeItem.color} />
+        )}
+      </DragOverlay>
     </DndContext>
   );
 };
