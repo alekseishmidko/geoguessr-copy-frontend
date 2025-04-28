@@ -13,9 +13,11 @@ import {
   verticalListSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
+import confetti from "canvas-confetti";
 
 import { COLORS } from "@/shared/constants/colors";
 import { SortableCube } from "./components/SortableCube";
+import { Button } from "@/shared/ui-kit/button/Button";
 
 type Cols = "0" | "1" | "2" | "3";
 
@@ -62,9 +64,8 @@ const allColumnsHaveUniformColors = (items: Record<Cols, Item[]>) => {
 };
 
 export const DragNDropBoxes = () => {
-  const cubePool = generateColorPool(COLORS, MAX_ITEMS_PER_COLUMN);
-
-  const [items, setItems] = useState<Record<Cols, Item[]>>(() => {
+  const generateInitialItems = () => {
+    const cubePool = generateColorPool(COLORS, MAX_ITEMS_PER_COLUMN);
     const result: Partial<Record<Cols, Item[]>> = {};
 
     COLUMNS.forEach((col, i) => {
@@ -78,9 +79,12 @@ export const DragNDropBoxes = () => {
     });
 
     return result as Record<Cols, Item[]>;
-  });
+  };
 
+  const [items, setItems] =
+    useState<Record<Cols, Item[]>>(generateInitialItems);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   const handleDragStart = (event: DragStartEvent) => {
     const activeId = event.active.id as string;
@@ -131,10 +135,11 @@ export const DragNDropBoxes = () => {
 
     if (sourceCol === targetCol) {
       const updated = arrayMove(targetItems, draggedItemIndex, targetIndex);
-      setItems({ ...items, [sourceCol]: updated });
+      const newState = { ...items, [sourceCol]: updated };
+      setItems(newState);
 
-      if (allColumnsHaveUniformColors({ ...items, [sourceCol]: updated })) {
-        alert("🎉 Победа! Все цвета разложены правильно!");
+      if (allColumnsHaveUniformColors(newState)) {
+        setIsGameOver(true);
       }
     } else {
       targetItems.splice(targetIndex, 0, movedItem);
@@ -146,38 +151,62 @@ export const DragNDropBoxes = () => {
       setItems(newState);
 
       if (allColumnsHaveUniformColors(newState)) {
-        alert("🎉 Победа! Все цвета разложены правильно!");
+        setIsGameOver(true);
+        confetti({
+          particleCount: 1150,
+          spread: 250,
+          origin: { y: 0.5 },
+        });
       }
     }
   };
 
-  return (
-    <DndContext
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="grid grid-cols-4 gap-6 mt-10">
-        {Object.entries(items).map(([colKey, column]) => (
-          <SortableContext
-            key={colKey}
-            items={column.map((item) => item.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="flex flex-col items-center gap-2 border border-gray-300 p-4 rounded bg-white min-h-[200px]">
-              {column.map(({ id, color }) => (
-                <SortableCube key={id} id={id} color={color} />
-              ))}
-            </div>
-          </SortableContext>
-        ))}
-      </div>
+  const handleRestart = () => {
+    setItems(generateInitialItems());
+    setIsGameOver(false);
+    setActiveItem(null);
+  };
 
-      <DragOverlay>
-        {activeItem && (
-          <SortableCube id={activeItem.id} color={activeItem.color} />
-        )}
-      </DragOverlay>
-    </DndContext>
+  return (
+    <div className="flex flex-col items-center">
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="grid grid-cols-4 gap-6 mt-10">
+          {Object.entries(items).map(([colKey, column]) => (
+            <SortableContext
+              key={colKey}
+              items={column.map((item) => item.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="flex flex-col items-center gap-2 border border-gray-300 p-4 rounded bg-white min-h-[200px]">
+                {column.map(({ id, color }) => (
+                  <SortableCube
+                    key={id}
+                    id={id}
+                    color={color}
+                    disabled={isGameOver}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          ))}
+        </div>
+
+        <DragOverlay>
+          {activeItem && (
+            <SortableCube id={activeItem.id} color={activeItem.color} />
+          )}
+        </DragOverlay>
+      </DndContext>
+
+      {isGameOver && (
+        <Button className="mt-8" onClick={handleRestart}>
+          Restart
+        </Button>
+      )}
+    </div>
   );
 };
