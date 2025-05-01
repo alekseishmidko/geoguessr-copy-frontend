@@ -7,7 +7,7 @@ type BirdProps = {
 };
 export const Bird: FC<BirdProps> = ({
   birdY,
-  birdUrl = `url('/bird.png')`,
+  birdUrl = `url('/plane.png')`,
   height = 32,
   width = 64,
 }) => {
