@@ -16,9 +16,10 @@ const GAME_WIDTH = 1200;
 const BIRD_WIDTH = 64;
 const BIRD_HEIGHT = 32;
 const BIRD_X = 150;
+const BIRD_Y = 300;
 export type Pipe = { x: number; gapTop: number };
 export function FlappyBird() {
-  const [birdY, setBirdY] = useState(300);
+  const [birdY, setBirdY] = useState(BIRD_Y);
   const [velocity, setVelocity] = useState(0);
   const [pipes, setPipes] = useState<Pipe[]>([]);
   const [isRunning, setIsRunning] = useState(true);
@@ -80,14 +81,17 @@ export function FlappyBird() {
 
   const handleJump = () => {
     if (!isRunning) {
-      setBirdY(300);
-      setVelocity(0);
-      setPipes([]);
-      setScore(0);
-      setIsRunning(true);
+      resetGame();
     } else {
       setVelocity(JUMP);
     }
+  };
+  const resetGame = () => {
+    setBirdY(BIRD_Y);
+    setVelocity(0);
+    setPipes([]);
+    setScore(0);
+    setIsRunning(true);
   };
 
   return (
@@ -128,7 +132,7 @@ export function FlappyBird() {
 
       <Score score={score} />
 
-      {!isRunning && <RestartScreen />}
+      {!isRunning && <RestartScreen score={score} onRestart={resetGame} />}
     </div>
   );
 }
