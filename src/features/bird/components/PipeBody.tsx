@@ -19,7 +19,7 @@ export const PipeBody: FC<Props> = ({
   const top = variant === "top" ? 0 : pipe.gapTop + pipeGap;
   return (
     <div
-      className="absolute bg-green-600"
+      className="absolute bg-slate-600"
       style={{
         left: pipe.x,
         top: top,
