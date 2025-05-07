@@ -5,4 +5,5 @@ export const PRIVATE_URL = {
   home: () => PRIVATE_URL.root("/"),
   box: () => PRIVATE_URL.root(`/box`),
   bird: () => PRIVATE_URL.root(`/bird`),
+  balloon: () => PRIVATE_URL.root(`/balloon`),
 };
