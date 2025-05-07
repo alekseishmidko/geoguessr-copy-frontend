@@ -11,6 +11,9 @@ export default function Home() {
       <Link href={PRIVATE_URL.bird()}>
         <Button variant="danger">Bird</Button>
       </Link>
+      <Link href={PRIVATE_URL.balloon()}>
+        <Button variant="danger">Balloon</Button>
+      </Link>
     </div>
   );
 }
