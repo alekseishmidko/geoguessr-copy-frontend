@@ -1,7 +1,10 @@
 "use client";
-import confetti from "canvas-confetti";
-import { useEffect, useRef, useState } from "react";
+
 import { Balloon } from "./components/Ball";
+import { StartScreen } from "./components/StartScreen";
+import { GameOverScreen } from "./components/GameOverScreen";
+import { Button } from "@/shared/ui-kit/button/Button";
+import { useBalloonPop } from "./useBalloonPop";
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
@@ -17,55 +20,33 @@ export type BalloonProp = {
 };
 
 export function BalloonPop() {
-  const [balloons, setBalloons] = useState<BalloonProp[]>([]);
-  const [score, setScore] = useState(0);
-  const balloonId = useRef(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newBalloon: BalloonProp = {
-        id: balloonId.current++,
-        x: Math.random() * (GAME_WIDTH - BALLOON_SIZE),
-        y: GAME_HEIGHT,
-        popped: false,
-      };
-      setBalloons((prev) => [...prev, newBalloon]);
-    }, BALLOON_INTERVAL);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const animation = setInterval(() => {
-      setBalloons((prev) =>
-        prev
-          .map((balloon) => ({ ...balloon, y: balloon.y - BALLOON_SPEED }))
-          .filter((b) => b.y + BALLOON_SIZE > 0 && !b.popped)
-      );
-    }, 16);
-    return () => clearInterval(animation);
-  }, []);
-
-  const handlePop = (balloon: BalloonProp) => {
-    setBalloons((prev) =>
-      prev.map((b) => (b.id === balloon.id ? { ...b, popped: true } : b))
-    );
-    console.log(balloon);
-    confetti({
-      particleCount: 90,
-      spread: 200,
-      origin: {
-        x: balloon.x / 900,
-        y: balloon.y / 900,
-      },
-    });
-    setScore((prev) => prev + 1);
-  };
+  const {
+    balloonId,
+    balloons,
+    handlePop,
+    handleStart,
+    isGameOver,
+    isPaused,
+    score,
+    setBalloons,
+    setIsGameOver,
+    started,
+    togglePause,
+  } = useBalloonPop({
+    gameHeight: GAME_HEIGHT,
+    gameWidth: GAME_WIDTH,
+    balloonInterval: BALLOON_INTERVAL,
+    balloonSize: BALLOON_SIZE,
+    balloonSpeed: BALLOON_SPEED,
+  });
 
   return (
     <div
       className="relative bg-sky-100 mx-auto mt-10 border border-gray-300 overflow-hidden"
       style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}
     >
+      {!started && <StartScreen onStart={handleStart} />}
+
       {balloons.map((balloon) => (
         <Balloon
           key={balloon.id}
@@ -75,9 +56,18 @@ export function BalloonPop() {
           onClick={() => handlePop(balloon)}
         />
       ))}
-      <div className="absolute top-4 left-4 text-xl font-bold">
+
+      <div className="absolute top-4 left-4 text-xl font-bold text-gray-800">
         Score: {score}
       </div>
+
+      {started && !isGameOver && (
+        <div className="absolute top-4 right-4">
+          <Button onClick={togglePause}>{isPaused ? "Resume" : "Pause"}</Button>
+        </div>
+      )}
+
+      {isGameOver && <GameOverScreen handleStart={handleStart} score={score} />}
     </div>
   );
 }
