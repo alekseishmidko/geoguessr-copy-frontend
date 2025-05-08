@@ -7,15 +7,7 @@ export const Balloon: React.FC<
     onClick: () => void;
   }
 > = (props) => {
-  const {
-    id,
-
-    x,
-    y,
-    balloonHeight = 60,
-    balloonWidth = 40,
-    onClick,
-  } = props;
+  const { id, x, y, balloonHeight = 50, balloonWidth = 50, onClick } = props;
 
   return (
     <div
