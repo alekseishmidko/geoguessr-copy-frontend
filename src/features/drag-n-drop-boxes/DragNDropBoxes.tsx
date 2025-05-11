@@ -9,6 +9,7 @@ import {
 import { SortableCube } from "./components/SortableCube";
 import { Button } from "@/shared/ui-kit/button/Button";
 import { useDragAndDrop } from "./useDragAndDrop";
+import { FC } from "react";
 
 export type Cols = "0" | "1" | "2" | "3";
 
@@ -17,7 +18,7 @@ export type Item = {
   color: string;
 };
 
-export const DragNDropBoxes = () => {
+export const DragNDropBoxes: FC = () => {
   const {
     activeItem,
     handleDragEnd,

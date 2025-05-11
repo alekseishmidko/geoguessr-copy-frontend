@@ -5,6 +5,7 @@ import { StartScreen } from "./components/StartScreen";
 import { GameOverScreen } from "./components/GameOverScreen";
 import { Button } from "@/shared/ui-kit/button/Button";
 import { useBalloonPop } from "./useBalloonPop";
+import { FC } from "react";
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
@@ -19,17 +20,15 @@ export type BalloonProp = {
   popped: boolean;
 };
 
-export function BalloonPop() {
+export const BalloonPop: FC = () => {
   const {
-    balloonId,
     balloons,
     handlePop,
     handleStart,
     isGameOver,
     isPaused,
     score,
-    setBalloons,
-    setIsGameOver,
+
     started,
     togglePause,
   } = useBalloonPop({
@@ -70,4 +69,4 @@ export function BalloonPop() {
       {isGameOver && <GameOverScreen handleStart={handleStart} score={score} />}
     </div>
   );
-}
+};
