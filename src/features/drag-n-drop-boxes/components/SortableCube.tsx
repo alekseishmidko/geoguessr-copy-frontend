@@ -1,15 +1,12 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
-export const SortableCube = ({
-  id,
-  color,
-  disabled,
-}: {
+import { FC } from "react";
+type Prop = {
   id: string;
   color: string;
-  disabled?: boolean; // сделаем optional
-}) => {
+  disabled?: boolean;
+};
+export const SortableCube: FC<Prop> = ({ id, color, disabled }) => {
   const {
     attributes,
     listeners,

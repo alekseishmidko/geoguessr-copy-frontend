@@ -9,6 +9,7 @@ import { Button } from "@/shared/ui-kit/button/Button";
 import { PauseScreen } from "./components/PausedScreen";
 import { StartScreen } from "./components/StartScreen";
 import { useFlappyBird } from "./useFlappyBird";
+import { FC } from "react";
 
 const GRAVITY = 0.5;
 const JUMP = -10;
@@ -24,7 +25,7 @@ const BIRD_Y = 300;
 
 export type Pipe = { x: number; gapTop: number };
 
-export function FlappyBird() {
+export const FlappyBird: FC = () => {
   const {
     birdY,
     gameRef,
@@ -107,4 +108,4 @@ export function FlappyBird() {
       )}
     </div>
   );
-}
+};
