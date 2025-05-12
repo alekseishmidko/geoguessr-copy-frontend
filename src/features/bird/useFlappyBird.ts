@@ -1,5 +1,40 @@
 import { useEffect, useRef, useState } from "react";
-import { Pipe } from "./FlappyBird";
+import type { Pipe } from "./FlappyBird";
+
+interface UseFlappyBirdParams {
+  birdXInit: number;
+  birdYInit: number;
+  jump: number;
+  gravity: number;
+  birdWidth: number;
+  birdHeight: number;
+  gameHeight: number;
+  gameWidth: number;
+  pipeWidth: number;
+  pipeGap: number;
+  pipeInterval: number;
+}
+
+interface UseFlappyBirdReturn {
+  birdY: number;
+  setBirdY: React.Dispatch<React.SetStateAction<number>>;
+  gameRef: React.RefObject<HTMLDivElement | null>;
+  isPaused: boolean;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+  isRunning: boolean;
+  setIsRunning: React.Dispatch<React.SetStateAction<boolean>>;
+  isStartScreen: boolean;
+  setIsStartScreen: React.Dispatch<React.SetStateAction<boolean>>;
+  velocity: number;
+  setVelocity: React.Dispatch<React.SetStateAction<number>>;
+  pipes: Pipe[];
+  setPipes: React.Dispatch<React.SetStateAction<Pipe[]>>;
+  score: number;
+  setScore: React.Dispatch<React.SetStateAction<number>>;
+  handleJump: () => void;
+  handlePause: () => void;
+  resetGame: () => void;
+}
 
 export const useFlappyBird = ({
   birdYInit,
@@ -13,19 +48,7 @@ export const useFlappyBird = ({
   birdXInit,
   pipeGap,
   pipeInterval,
-}: {
-  birdXInit: number;
-  birdYInit: number;
-  jump: number;
-  gravity: number;
-  birdWidth: number;
-  birdHeight: number;
-  gameHeight: number;
-  gameWidth: number;
-  pipeWidth: number;
-  pipeGap: number;
-  pipeInterval: number;
-}) => {
+}: UseFlappyBirdParams): UseFlappyBirdReturn => {
   const [birdY, setBirdY] = useState(birdYInit);
   const [velocity, setVelocity] = useState(0);
   const [pipes, setPipes] = useState<Pipe[]>([]);
@@ -43,7 +66,7 @@ export const useFlappyBird = ({
   };
 
   const handlePause = () => {
-    setIsPaused(!isPaused);
+    setIsPaused((prev) => !prev);
   };
 
   const resetGame = () => {
@@ -140,6 +163,7 @@ export const useFlappyBird = ({
     pipeGap,
     gameWidth,
   ]);
+
   return {
     birdY,
     setBirdY,

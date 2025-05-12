@@ -1,5 +1,6 @@
 import { Button } from "@/shared/ui-kit/button/Button";
-import React, { FC, useEffect } from "react";
+import type { FC } from "react";
+import React, { useEffect } from "react";
 
 interface RestartScreenProps {
   score: number;

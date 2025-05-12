@@ -1,5 +1,6 @@
+import type { Dispatch, RefObject, SetStateAction } from "react";
 import { useEffect, useRef, useState } from "react";
-import { BalloonProp } from "./BalloonPop";
+import type { BalloonProp } from "./BalloonPop";
 import confetti from "canvas-confetti";
 
 export const useBalloonPop = ({
@@ -14,7 +15,22 @@ export const useBalloonPop = ({
   balloonSpeed: number;
   balloonInterval: number;
   balloonSize: number;
-}) => {
+}): {
+  balloonId: RefObject<number>;
+  balloons: BalloonProp[];
+  setBalloons: Dispatch<SetStateAction<BalloonProp[]>>;
+  score: number;
+  setScore: Dispatch<SetStateAction<number>>;
+  started: boolean;
+  setStarted: Dispatch<SetStateAction<boolean>>;
+  isGameOver: boolean;
+  setIsGameOver: Dispatch<SetStateAction<boolean>>;
+  isPaused: boolean;
+  setIsPaused: Dispatch<SetStateAction<boolean>>;
+  handlePop: (balloon: BalloonProp) => void;
+  handleStart: () => void;
+  togglePause: () => void;
+} => {
   const [balloons, setBalloons] = useState<BalloonProp[]>([]);
   const [score, setScore] = useState(0);
   const [started, setStarted] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import type { FC } from "react";
 import { Button } from "@/shared/ui-kit/button/Button"; // если нет — замени на обычную <button>
 
 type Props = {

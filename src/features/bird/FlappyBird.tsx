@@ -9,7 +9,7 @@ import { Button } from "@/shared/ui-kit/button/Button";
 import { PauseScreen } from "./components/PausedScreen";
 import { StartScreen } from "./components/StartScreen";
 import { useFlappyBird } from "./useFlappyBird";
-import { FC } from "react";
+import type { FC } from "react";
 
 const GRAVITY = 0.5;
 const JUMP = -10;

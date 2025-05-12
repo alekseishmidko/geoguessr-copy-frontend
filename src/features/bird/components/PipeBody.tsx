@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Pipe } from "../FlappyBird";
+import type { FC } from "react";
+import type { Pipe } from "../FlappyBird";
 type Props = {
   pipeGap: number;
   pipeWidth: number;

@@ -1,9 +1,11 @@
 import { BalloonPop } from "@/features/balloon/BalloonPop";
+import type { FC } from "react";
 
-export default function BalloonGame() {
+const BalloonGame: FC = () => {
   return (
     <>
       <BalloonPop />
     </>
   );
-}
+};
+export default BalloonGame;

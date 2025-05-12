@@ -9,7 +9,7 @@ import {
 import { SortableCube } from "./components/SortableCube";
 import { Button } from "@/shared/ui-kit/button/Button";
 import { useDragAndDrop } from "./useDragAndDrop";
-import { FC } from "react";
+import type { FC } from "react";
 
 export type Cols = "0" | "1" | "2" | "3";
 

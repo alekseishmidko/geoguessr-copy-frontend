@@ -1,5 +1,5 @@
-import { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
-import { Cols, Item } from "./DragNDropBoxes";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import type { Cols, Item } from "./DragNDropBoxes";
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import confetti from "canvas-confetti";
@@ -40,7 +40,14 @@ const allColumnsHaveUniformColors = (items: Record<Cols, Item[]>) => {
     return column.every((item) => item.color === firstColor);
   });
 };
-export const useDragAndDrop = () => {
+export const useDragAndDrop = (): {
+  handleDragEnd: (event: DragEndEvent) => void;
+  handleDragStart: (event: DragStartEvent) => void;
+  isGameOver: boolean;
+  handleRestart: () => void;
+  items: Record<Cols, Item[]>;
+  activeItem: Item | null;
+} => {
   const generateInitialItems = () => {
     const cubePool = generateColorPool(COLORS, MAX_ITEMS_PER_COLUMN);
     const result: Partial<Record<Cols, Item[]>> = {};

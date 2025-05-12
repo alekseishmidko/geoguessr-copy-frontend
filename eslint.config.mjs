@@ -13,6 +13,13 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          prefer: "type-imports",
+          disallowTypeAnnotations: false,
+        },
+      ],
       // Запрещаем использование console.log в продакшн коде
       "no-console": ["error", { allow: ["warn", "error"] }],
 

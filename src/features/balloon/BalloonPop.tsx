@@ -5,7 +5,7 @@ import { StartScreen } from "./components/StartScreen";
 import { GameOverScreen } from "./components/GameOverScreen";
 import { Button } from "@/shared/ui-kit/button/Button";
 import { useBalloonPop } from "./useBalloonPop";
-import { FC } from "react";
+import type { FC } from "react";
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
