@@ -1,5 +1,5 @@
 import { Button } from "@/shared/ui-kit/button/Button";
-import { FC } from "react";
+import type { FC } from "react";
 
 type Props = {
   score: number;

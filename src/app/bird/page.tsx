@@ -1,9 +1,11 @@
 import { FlappyBird } from "@/features/bird/FlappyBird";
+import type { FC } from "react";
 
-export default function Bird() {
+const BirdPage: FC = () => {
   return (
     <>
       <FlappyBird />
     </>
   );
-}
+};
+export default BirdPage;

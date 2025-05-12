@@ -1,4 +1,4 @@
-import { BalloonProp } from "../BalloonPop";
+import type { BalloonProp } from "../BalloonPop";
 
 export const Balloon: React.FC<
   BalloonProp & {
