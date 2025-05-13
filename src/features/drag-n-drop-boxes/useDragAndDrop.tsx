@@ -16,7 +16,9 @@ const generateColorPool = (colors: string[], maxPerColor: number): Item[] => {
       (color) => (colorCount[color] || 0) < maxPerColor
     );
 
-    if (availableColors.length === 0) break;
+    if (availableColors.length === 0) {
+      break;
+    }
 
     const color =
       availableColors[Math.floor(Math.random() * availableColors.length)];
@@ -35,7 +37,9 @@ const generateColorPool = (colors: string[], maxPerColor: number): Item[] => {
 
 const allColumnsHaveUniformColors = (items: Record<Cols, Item[]>) => {
   return Object.values(items).every((column) => {
-    if (column.length === 0) return true;
+    if (column.length === 0) {
+      return true;
+    }
     const firstColor = column[0].color;
     return column.every((item) => item.color === firstColor);
   });
@@ -83,7 +87,9 @@ export const useDragAndDrop = (): {
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveItem(null);
     const { active, over } = event;
-    if (!over || active.id === over.id) return;
+    if (!over || active.id === over.id) {
+      return;
+    }
 
     const activeId = active.id as string;
     const overId = over.id as string;
@@ -101,7 +107,9 @@ export const useDragAndDrop = (): {
       }
     }
 
-    if (sourceCol === undefined || targetCol === undefined) return;
+    if (sourceCol === undefined || targetCol === undefined) {
+      return;
+    }
 
     const sourceItems = [...items[sourceCol]];
     const targetItems = [...items[targetCol]];
