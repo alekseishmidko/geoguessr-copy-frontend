@@ -39,7 +39,9 @@ export const useBalloonPop = ({
   const balloonId = useRef(0);
 
   const handlePop = (balloon: BalloonProp) => {
-    if (isPaused) return;
+    if (isPaused) {
+      return;
+    }
 
     setBalloons((prev) =>
       prev.map((b) => (b.id === balloon.id ? { ...b, popped: true } : b))
@@ -57,7 +59,9 @@ export const useBalloonPop = ({
   };
 
   useEffect(() => {
-    if (!started || isGameOver || isPaused) return;
+    if (!started || isGameOver || isPaused) {
+      return;
+    }
     const interval = setInterval(() => {
       const newBalloon: BalloonProp = {
         id: balloonId.current++,
@@ -81,7 +85,9 @@ export const useBalloonPop = ({
   ]);
 
   useEffect(() => {
-    if (!started || isGameOver || isPaused) return;
+    if (!started || isGameOver || isPaused) {
+      return;
+    }
     const animation = setInterval(() => {
       setBalloons((prev) => {
         const updated = prev.map((balloon) => ({

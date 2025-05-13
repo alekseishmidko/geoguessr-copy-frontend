@@ -80,9 +80,6 @@ const eslintConfig = [
       // ✅ Константы по возможности
       "prefer-const": "error",
 
-      // ✅ Упрощение стрелочных функций
-      "arrow-body-style": ["error", "as-needed"],
-
       // ✅ Обязательный возврат в коллбэках
       "array-callback-return": "warn",
     },
