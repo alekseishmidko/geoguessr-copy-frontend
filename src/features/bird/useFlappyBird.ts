@@ -59,7 +59,9 @@ export const useFlappyBird = ({
   const gameRef = useRef<HTMLDivElement>(null);
 
   const handleJump = () => {
-    if (!isRunning || isStartScreen) return;
+    if (!isRunning || isStartScreen) {
+      return;
+    }
     if (!isPaused) {
       setVelocity(jump);
     }
@@ -148,7 +150,9 @@ export const useFlappyBird = ({
   ]);
 
   useEffect(() => {
-    if (!isRunning || isPaused || isStartScreen) return;
+    if (!isRunning || isPaused || isStartScreen) {
+      return;
+    }
     const interval = setInterval(() => {
       const gapTop = Math.floor(Math.random() * (gameHeight - pipeGap - 100));
       setPipes((prev) => [...prev, { x: gameWidth, gapTop }]);
