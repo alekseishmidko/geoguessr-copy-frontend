@@ -13,6 +13,7 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
+      // ✅ Использование только type-импортов
       "@typescript-eslint/consistent-type-imports": [
         "error",
         {
@@ -20,24 +21,70 @@ const eslintConfig = [
           disallowTypeAnnotations: false,
         },
       ],
-      // Запрещаем использование console.log в продакшн коде
+
+      // ✅ Запрет console.log кроме warn/error
       "no-console": ["error", { allow: ["warn", "error"] }],
 
-      // Требуем явное указание типа для экспортируемых сущностей
+      // ✅ Требовать указания типов у экспортируемых функций
       "@typescript-eslint/explicit-module-boundary-types": "error",
 
-      // Запрещаем использование типа any
+      // ✅ Предупреждать о any
       "@typescript-eslint/no-explicit-any": "warn",
 
-      // Требуем использования согласованных типов при приведение типов
+      // ✅ Требовать единый стиль приведения типов
       "@typescript-eslint/consistent-type-assertions": "error",
 
-      // Запрещаем ненужные экспортируемые типы
-      "@typescript-eslint/no-unused-vars": "warn",
+      // ✅ Предупреждать об неиспользуемых переменных
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
 
-      // Добавить другие правила, если необходимо
-      "no-unused-vars": "off", // Выключаем стандартное правило для unused-vars в пользу TypeScript версии
-      "@typescript-eslint/no-inferrable-types": "off", // Отключаем предупреждения о неявно определенных типах
+      // ✅ Неявные типы разрешены
+      "@typescript-eslint/no-inferrable-types": "off",
+
+      // ✅ Ограничить вложенность JSX до 3-х уровней
+      "react/jsx-max-depth": ["warn", { max: 3 }],
+
+      // ✅ Обязательный key в списках
+      "react/jsx-key": "error",
+
+      // ✅ Запретить хук useEffect без зависимостей
+      "react-hooks/exhaustive-deps": "warn",
+
+      // ✅ Запретить вызовы хуков вне тела компонента/хука
+      "react-hooks/rules-of-hooks": "error",
+
+      // ✅ Обязательное использование PascalCase для компонентов
+      "react/jsx-pascal-case": "error",
+
+      // ✅ Не разрешать лишние скобки
+      "no-extra-parens": ["warn", "all"],
+
+      // ✅ Обязательный `default` в switch
+      "default-case": "warn",
+
+      // ✅ Запрет на пустые блоки
+      "no-empty": "error",
+
+      // ✅ Последовательность в if-else
+      curly: ["error", "all"],
+
+      // ✅ Запрет на else после return
+      "no-else-return": "warn",
+
+      // ✅ Поддержка безопасности: запрет на eval и т.д.
+      "no-eval": "error",
+      "no-implied-eval": "error",
+
+      // ✅ Константы по возможности
+      "prefer-const": "error",
+
+      // ✅ Упрощение стрелочных функций
+      "arrow-body-style": ["error", "as-needed"],
+
+      // ✅ Обязательный возврат в коллбэках
+      "array-callback-return": "warn",
     },
   },
 ];
